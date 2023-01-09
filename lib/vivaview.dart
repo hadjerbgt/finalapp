@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:finalapp/main.dart';
 
 class ViewMyVivas extends StatefulWidget {
-  const ViewMyVivas({super.key});
+  String teacher;
+  ViewMyVivas({super.key, required this.teacher});
 
   
 
@@ -14,7 +16,7 @@ class ViewMyVivas extends StatefulWidget {
 class _ViewMyVivasState extends State<ViewMyVivas> {
   
    Future <List> getViva() async{
-    String uri="http://192.168.187.158/crud/viewoldviva.php";
+    String uri="http://10.40.3.195/crud/viewoldviva.php";
     
       var respons = await http.get(Uri.parse(uri));
       
@@ -36,7 +38,7 @@ class _ViewMyVivasState extends State<ViewMyVivas> {
             print(snapshot.error);
           }
         return snapshot.hasData 
-           ? ItemList(list: snapshot.data!,)
+           ? ItemList(list: snapshot.data!,teacher: widget.teacher)
            : Center (child: CircularProgressIndicator(),);
         },
       )  
@@ -47,7 +49,8 @@ class _ViewMyVivasState extends State<ViewMyVivas> {
 class ItemList extends StatelessWidget {
   
   final List list;
-  ItemList ({required this.list});
+  final String teacher;
+  ItemList ({required this.list, required this.teacher});
 
 
   @override
@@ -55,7 +58,7 @@ class ItemList extends StatelessWidget {
     return ListView.builder(
       itemCount: list==null?0:list.length,
       itemBuilder: (context, i) {
-        return Container(
+        if(list[i]["supervisorname"]== teacher){return Container(
           padding: const EdgeInsets.all(10.0),
           child: Card(
             child: ListTile(
@@ -64,7 +67,7 @@ class ItemList extends StatelessWidget {
               subtitle: Text("It was presnted by these students:\n ${list[i]["firststudent"]}, ${list[i]["secondstudent"]} and ${list[i]["thirdstudent"]}.\nThey got ${list[i]["finalmark"]}."),
             ),
           ),
-        );    
+        ); }else{return Container();}   
       },
     );
   }
