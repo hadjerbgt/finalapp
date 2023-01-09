@@ -3,11 +3,67 @@ import 'package:finalapp/app2/form.dart';
 import 'package:finalapp/app1/Calculate.dart';
 import 'package:finalapp/vivaview.dart';
 
-class DashBoardV extends StatelessWidget {
+class DashBoardV extends StatefulWidget {
   const DashBoardV({super.key});
 
-@override
- 
+  @override
+  State<DashBoardV> createState() => _DashBoardVState();
+}
+
+  class _DashBoardVState extends State<DashBoardV> {
+  
+  
+
+
+
+   
+
+  late String codeDialog;
+
+  Future<void> _displayTextInputDialog(BuildContext context) async {
+      String valueText="";
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Please enter your Full Name',style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),),
+            content: TextField(
+              onChanged: (value) {
+                setState(() {
+                  valueText = value;
+                });
+              },
+              decoration: InputDecoration(hintText: "Name like the one in the created vivas"),
+            ),
+            actions: <Widget>[
+              OutlinedButton(
+                child: Text('CANCEL',style: TextStyle(color: Colors.white)),
+                style: OutlinedButton.styleFrom( 
+                  backgroundColor: Colors.red
+                ),
+                onPressed: () {
+                  setState(() {
+                    Navigator.pop(context);
+                  });
+                },
+              ),
+              OutlinedButton(
+                child: Text('OK',style: TextStyle(color: Colors.white)),
+                onPressed: () {
+                  setState(() {
+                    codeDialog = valueText;
+                    Navigator.push(context, MaterialPageRoute(builder: (context){return ViewMyVivas(teacher: codeDialog);}),);
+                  });
+                },
+                style: OutlinedButton.styleFrom( 
+                  backgroundColor: Colors.green
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,7 +122,8 @@ class DashBoardV extends StatelessWidget {
                     ),
                     SizedBox(width: 8.0),
                     OutlinedButton(onPressed:() {
-                       Navigator.push(context, MaterialPageRoute(builder: (context){return ViewMyVivas();}),);
+                        
+                       _displayTextInputDialog(context);
                       },
                       style: 
                         OutlinedButton.styleFrom(minimumSize: const Size(200,50),
